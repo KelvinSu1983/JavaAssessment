@@ -43,9 +43,12 @@ public class Main
                 case 6:
                     showCoursesSummary( courseService, scanner );
                     break;
+                case 7:
+                    showPassedCourses( studentService, scanner);
+                    break;
             }
         }
-        while ( option != 7 );
+        while ( option != 8 );
     }
 
     private static void enrollStudentToCourse( StudentService studentService, CourseService courseService,
@@ -87,7 +90,61 @@ public class Main
 
     private static void gradeStudent( StudentService studentService, Scanner scanner )
     {
+    /*Logic for grading student:
+    1. Ask for student ID first
+    1.1 Check whether the student exists
+    2. Ask for the course ID next
+    2.1 find whether the student is taking the course
+    3. If the student is taking a course, determine how to grade,
+    then assign grade to the student
+    */
+        System.out.println("Enter the student ID:");
+        String studentId = scanner.next();
+        Student student = studentService.findStudent(studentId);
 
+        if(student != null){
+            System.out.printf("Enter the course ID for student ID%s%n", studentId);
+            String courseId = scanner.next();
+            boolean isAttendingCourse = student.isAttendingCourse(courseId);
+
+            //if the course is found where isAttendingCourse == true
+            //then we grade the course
+            //else we issue feedback that the student did not take the course
+
+            if(isAttendingCourse) {
+
+                System.out.println("Yes the student is attending the course. Enter the score of the student:");
+
+                double score = scanner.nextDouble();
+                if(score<0 || score >9)
+                    System.out.println("Invalid score entry");
+                else
+                    System.out.println(student.setGrade(courseId, score));
+            }else
+                System.out.println("Student is not attending this course");
+
+        } else{
+            System.out.printf("Student with ID="+ studentId + "is not found");
+        }
+    }
+
+    private static void showPassedCourses( StudentService studentService, Scanner scanner )
+    {
+        System.out.println( "Enter student ID: " );
+        String studentId = scanner.next();
+        Student student = studentService.findStudent( studentId );
+        if ( student != null )
+        {
+            System.out.println( "Student Found: " );
+            System.out.println( student );
+
+            // Show the courses the student passed
+            studentService.showPassedCourses(student);
+        }
+        else
+        {
+            System.out.println( "Student with Id = " + studentId + " not found" );
+        }
     }
 
     private static void findStudent( StudentService studentService, Scanner scanner )

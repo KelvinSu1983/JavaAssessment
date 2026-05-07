@@ -16,6 +16,8 @@ public class Student
 
     private final Map<String, Course> approvedCourses = new HashMap<>();
 
+    private final Map<String, Double> courseGrade = new HashMap<>();  // <courseId. grade>
+
     public Student( String id, String name, String email, Date birthDate )
     {
         super( id, name, email, birthDate );
@@ -23,7 +25,15 @@ public class Student
 
     public void enrollToCourse( Course course )
     {
-        //TODO implement this method
+        //DONE: TODO implement this method
+        //if the course DOESN'T exist in courses
+        //then we add the course to courses and approvedCourses
+        //the course credits is also added to average
+        if(!courses.contains(course)) {
+            courses.add(course);
+            registerApprovedCourse(course);
+            this.average += (double) course.getCredits();
+        }
     }
 
     public void registerApprovedCourse( Course course )
@@ -37,17 +47,54 @@ public class Student
         return false;
     }
 
-    // CHALLENGE IMPLEMENTATION: Read README.md to find instructions on how to solve. 
-    public List<Course> findPassedCourses( Course course )
+    // CHALLENGE IMPLEMENTATION: Read README.md to find instructions on how to solve.
+    public String setGrade(String courseId, double score){
+        if(approvedCourses.containsKey((courseId))){
+
+            if(!courseGrade.containsKey(courseId)){
+                courseGrade.put(courseId,score);
+
+                return String.format("Score for the course ID: %s is stored successfully", courseId);
+
+            }else{
+
+                return String.format("Duplicate entry. Cannot enter score for course ID: %s", courseId);
+            }
+
+        }
+        return String.format("Student did not take course ID: %s", courseId);
+    }
+
+    public List<Course> findPassedCourses()
     {
         //TODO implement this method
-        return null;
+        List<Course> passedCourses = new ArrayList<>();
+
+        courseGrade.forEach((courseId, score)->{
+
+            //find the course by the courseId
+            //get the course credit
+            //if score is greater than avg of course credit
+            //add to the passedCourses
+
+            if(approvedCourses.containsKey(courseId)){
+                Course course = approvedCourses.get(courseId);
+
+                if (score >= (double)course.getCredits()/2){
+                    passedCourses.add(course);
+                }
+            }
+
+        });
+
+        return passedCourses;
     }
 
     public boolean isAttendingCourse( String courseCode )
     {
-        //TODO implement this method
-        return false;
+        //DONE: TODO implement this method
+
+        return approvedCourses.containsKey(courseCode);
     }
 
     @Override
@@ -57,10 +104,17 @@ public class Student
     }
 
     @Override
-    public List<Course> getApprovedCourses()
-    {
+    public List<Course> getApprovedCourses() {
         //TODO implement this method
-        return null;
+        //return courses that only the student is taking
+        List<Course> listedCourses = new ArrayList<>();
+
+        if (!approvedCourses.isEmpty()) {
+            approvedCourses.forEach((courseId, course) -> {
+                listedCourses.add(course);
+            });
+        }
+        return listedCourses;
     }
 
     @Override
