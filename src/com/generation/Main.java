@@ -22,7 +22,7 @@ public class Main
         do
         {
             PrinterHelper.showMainMenu();
-            option = scanner.nextInt();
+            option = Integer.parseInt(scanner.nextLine());
             switch ( option )
             {
                 case 1:

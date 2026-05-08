@@ -32,9 +32,15 @@ public class StudentService
         return null;
     }
 
-    public boolean isSubscribed( String studentId )
+    public boolean isSubscribed( String studentId, String courseCode )
     {
         //TODO implement this method
+        //method function: to find out if a student is
+        //subscribed to a given course
+        Student student = findStudent(studentId);
+        if (student != null) {
+            return student.isAttendingCourse(courseCode);
+        }
         return false;
     }
 

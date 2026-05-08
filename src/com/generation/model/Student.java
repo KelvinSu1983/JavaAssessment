@@ -44,7 +44,7 @@ public class Student
     public boolean isCourseApproved( String courseCode )
     {
         //TODO implement this method
-        return false;
+        return approvedCourses.containsKey(courseCode);
     }
 
     // CHALLENGE IMPLEMENTATION: Read README.md to find instructions on how to solve.
